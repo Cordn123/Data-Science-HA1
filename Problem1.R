@@ -1,5 +1,4 @@
-#Problem1.1
-#Problem #1.1
+#Problem 1.1
 R_squared <- vector(length=1000) #creating vector to store R_2 of predefined length
 RSS <- vector(length=1000) #creating vector to store RSS of predefined length
 
@@ -15,7 +14,7 @@ for(i in 1:1000){ #running loop
 hist(R_squared) #plotting hists
 hist(RSS)
 
-#1.2
+#Problem 1.2
 f_hist<-function(n, N, e_sd,...){ #creating function with described parameters, "..." stands for histogram parameters
   R_squared <- vector(length=N) #dublicating from 1.1 and expressing parameters in general form
   RSS <- vector(length=N)
