@@ -17,5 +17,5 @@ hist(RSS)
 
 #1.2
 f_hist<-function(x){
-  
+  x
 }
