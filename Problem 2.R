@@ -12,10 +12,10 @@ bind_cols #Dataframe for a dataset created, but id column duplictes still remain
 #Without dplyr and readr the code could look like this (for example):
 
 # Filenames <- list.files("hw1p2", full.names = TRUE)
-# Data <- lapply(Filenames,function(i){
+# Data <- lapply(Filenames, function(i){
 #  read.csv(i, header=TRUE)
 # })
-# DataFrame <- do.call(cbind.data.frame, Data)
+# DataFrame <- cbind.data.frame(Data)
 
-#Which is extremely cunbersome and boring, so we'll stick with dplyr
+#Which is extremely cumbersome and boring, so we'll stick with dplyr
 
