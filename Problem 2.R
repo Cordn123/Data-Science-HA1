@@ -1,16 +1,9 @@
 rm(list=ls())
-library(xml2)
-library(data.table)
-library(stringr)
 
-#Define the working directory:
-working_dir<-"/Users/PatratskyAlexander/Desktop/ICEF\ 3rd\ Year/Data\ Science/HA/HA1/Data-Science-HA1/hw1p2.zip"
+library("dplyr")
+library("readr")
 
-#Read the file directly from the zip:
-y<-list_of_xmls[1]
-conn<-unz(x,y)
-data_raw<-read_xml(conn,encoding = "UTF-8")
+unzip("hw1p2.zip")
+filenames <- list.files("hw1p2")
 
-#or (i in 1:8){
-#  data_x[i] <-xml_x[i](data_raw)
-#}
+
