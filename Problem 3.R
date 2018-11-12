@@ -1,7 +1,6 @@
 #Problem 3
 #3.1
 library(data.table)
-setwd("/Users/PatratskyAlexander/Desktop/ICEF\ 3rd\ Year/Data\ Science/HA/HA1")
 data <- fread('hw1p3.csv') #also possible to use read.csv('hw1p3.csv'), but fread is much faster
 summary(data)
 View(data)
@@ -20,7 +19,6 @@ count_na
 
 #using data.table
 colSums(is.na(data))
-
 
 #3.2
 #Using loops
@@ -53,7 +51,7 @@ vec_genxp
 #using apply functions
 #хз как сделать апплаем
 #for year of birth
-sapply(data, function(x) mean(x$exp_by_1996, na.rm = TRUE)) #na.rm indicates whether NAs should be dropped
+sapply(data, function(columns) mean(data$exp_by_1996, na.rm = TRUE)) #na.rm indicates whether NAs should be dropped
 
 #for gender
 sapply()
@@ -93,8 +91,9 @@ data_mean_femalexp
 
 #plotting this mean for both men and women separately as a function of year of birth
 #Example just for men 
-ggplot(data_mean_malexp,
-       aes(x = year_of_birth, y = mean_wxp)) + geom_line(colour='orange')
+
+#ggplot(data_mean_malexp,
+#       aes(x = year_of_birth, y = mean_wxp)) + geom_line(colour='orange')
 
 #This works, can't change colors though
 ggplot(data_mean_malexp, aes(year_of_birth, mean_wxp)) + 
