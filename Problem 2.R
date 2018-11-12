@@ -51,5 +51,3 @@ lapply(4, function(n) combn(X , n, FUN = function(row) paste0("y ~ ", paste0(row
   assign("models", . , pos = 1)
 
 filter(models, r.squared == max(r.squared)) #filtering to find the model with the highest R^2
-    
-
