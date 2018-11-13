@@ -63,6 +63,8 @@ tapply(data$exp_by_1996, data$year_of_birth, FUN = mean) #years of birth
 
 tapply(data$exp_by_1996, data$gender, FUN = mean) #gender
 
+#REPAIRS DONE 
+
 #for gender
 sapply()
 
