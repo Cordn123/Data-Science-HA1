@@ -9,7 +9,7 @@ library(tidyverse)
 
 # It's easier to call them up through the "tidyverse" 
 
-#Creating a list of names of files in the archive
+#Creating a list of names of files in the archive (without extracting them!)
 list_files<-unzip("hw1p2.zip",list=TRUE)[,1]
 #Locating the .csv files
 list_files<-list_files[str_detect(list_files,".csv")]
