@@ -19,6 +19,7 @@ for (i in 1:length(list_files)) {
   conn<-unz("hw1p2.zip", list_files[i])
   Data[[i]]<-(read_csv(conn))
 } 
+unlink(conn) #closing the connection
 #Binding the columns in the 9 resulting dataframes to fuse them into a single dataframe
 Data <- bind_cols(Data)
 
