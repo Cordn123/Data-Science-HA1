@@ -4,7 +4,7 @@ library(tidyverse)
 
 #Packages used:
 # "readr" 
-# "magrittr" 
+# "magrittr" (piping is used extensively throughout the problem)
 # "dplyr" 
 
 # It's easier to call them up through the "tidyverse" 
@@ -25,10 +25,10 @@ Data <- bind_cols(Data)
 
 library(broom) # "broom" allows for a smooth transition from lm output to an orginised dataframe 
 
-Data %>%
+Data %>% 
   select(starts_with("x")) %>% 
   names() %>% 
-  assign("X", . , pos = 1) #Extracted varible column names and stored them in "X" 
+  assign("X", . , pos = 1) #Extracted varible column names and stored them in "X" through piping
 
 # Running the regression analysis via piping: 
 
@@ -45,6 +45,7 @@ lapply(4, function(n) combn(X , n, FUN = function(row) paste0("y ~ ", paste0(row
 
 # 3) Running the regression and outputing a dataframe with summary statistics ("bind_rows" and "glance" functions) 
   # for all 70 models and matching to correpsonding equations. 
+  
   lapply(. ,function(y) { 
     models = glance(lm(y, Data)) # "glance" outputs a dataframe with summary statistics for a given regression
     models$y = y #attaching a column with the corresponding model equation to individual summaries
@@ -52,6 +53,7 @@ lapply(4, function(n) combn(X , n, FUN = function(row) paste0("y ~ ", paste0(row
   bind_rows() %>% #Binding all summaries by rows to create a dataframe 
   
 # 4) Storing the dataframe in "models" via the "assign" function with "pos" set to 1 for global environment
+  
   assign("models", . , pos = 1)
 
 filter(models, r.squared == max(r.squared)) #filtering to find the model with the highest R^2

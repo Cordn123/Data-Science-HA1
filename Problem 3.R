@@ -1,5 +1,7 @@
 #Problem 3
 #3.1
+rm(list=ls())
+
 library(data.table)
 data <- fread('hw1p3.csv') #also possible to use read.csv('hw1p3.csv'), but fread is much faster
 summary(data)
@@ -52,6 +54,14 @@ vec_genxp
 #хз как сделать апплаем
 #for year of birth
 sapply(data, function(columns) mean(data$exp_by_1996, na.rm = TRUE)) #na.rm indicates whether NAs should be dropped
+
+#EGOR's APPLIED REPAIRS - for all your applying needs 
+
+#Using tapply() function to calculate grouped means by year of birth and gender:
+
+tapply(data$exp_by_1996, data$year_of_birth, FUN = mean) #years of birth
+
+tapply(data$exp_by_1996, data$gender, FUN = mean) #gender
 
 #for gender
 sapply()
