@@ -1,9 +1,12 @@
 #Problem 3
 rm(list=ls())
+
+#3.1
 library(data.table)
 data <- fread('hw1p3.csv') #also possible to use read.csv('hw1p3.csv'), but fread is much faster
 summary(data)
 View(data)
+head(data)
 
 #3.1
 #using loops
@@ -49,16 +52,15 @@ for (i in 1:length(vec_gender)){
 vec_genxp
 typeof(vec_gender[1])
 
-#---------- ENTERING PROBLEM AREA
-#using apply functions
-#хз как сделать апплаем
-#for year of birth
-sapply(data, function(columns) mean(data$exp_by_1996, na.rm = TRUE)) #na.rm indicates whether NAs should be dropped
+#EGOR's APPLIED REPAIRS - for all your applying needs 
 
-#for gender
-sapply()
+#Using tapply() function to calculate grouped means by year of birth and gender:
 
-#-------- LEAVING PROBLEM AREA
+tapply(data$exp_by_1996, data$year_of_birth, FUN = mean) #years of birth
+
+tapply(data$exp_by_1996, data$gender, FUN = mean) #gender
+
+#REPAIRS DONE 
 
 #using data.table
 #for year of birth
@@ -106,23 +108,42 @@ ggplot(data_mean_malexp, aes(year_of_birth, mean_wxp)) +
   ylab('Mean work exp. in years until 1996')
 
 
-#3.4
+#3.4 
 
+data_aux345 <- data[, c('date_of_birth', 'gender', 'exp_by_1996', 'year_of_birth'):=NULL]
+#creating data containing just dummy variables for easy further calculations
+
+#------- ENTERING PROBLEM AREA
 #using loops
-vec_of_nar <- c(length=length(data)) #НЕ РАБОТАЕТ ПОЧЕМУ-ТО
-for (i in 1:nrow(data)){
-  vec_of_nar[i] <- sum(is.na(data[i, ]))
+
+vec_of_nar <- c(length=length(data_aux345)) #не работает цикл
+
+for (i in 1:nrow(data_aux345)){
+  vec_of_nar[i] <- sum(is.na(data_aux345[i, ]))
 }
 vec_of_nar
 
+#------ LEAVING PROBLEM AREA
+
 #using apply functions
-count_na <- sapply(data, function(x) sum(is.na(x))) 
-count_na
+count_nar <- apply(data_aux345, 1, function(x) sum(is.na(x)))
+count_nar
 
 #using data.table
-rowSums(is.na(data))
+rowSums(is.na(data_aux345)) 
+#https://stackoverflow.com/questions/37801338/r-count-nas-per-row-in-dataframe
 
-Print("5")
+#3.5
+vec_totalxp <- vector(length = length(data_aux345))
+for (i in 1:nrow(data_aux345)){
+  if(apply(data_aux345, 1, function(x) sum(is.na(x)) == 0)) {
+    vec_totalxp[i] <- sum(data[i,])
+    #apply(data, 1, function(i) sum(i))
+  } else {
+    vec_totalxp[i] <- NA
+  }
+
+}
 
 
 
