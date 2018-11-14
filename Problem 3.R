@@ -1,17 +1,18 @@
 #Problem 3
-#3.1
+rm(list=ls())
 library(data.table)
 data <- fread('hw1p3.csv') #also possible to use read.csv('hw1p3.csv'), but fread is much faster
 summary(data)
 View(data)
 
+#3.1
 #using loops
-vec_of_na <- c(length=length(data)) #правда в этом случае не подписаны переменные. Можно попробовать лист, 
+vec_of_nac <- c(length=length(data)) #правда в этом случае не подписаны переменные. Можно попробовать лист, 
 #но там тоже придется переименовывать элементы
 for (i in 1:ncol(data)){
-  vec_of_na[i] <- sum(is.na(data[, i]))
+  vec_of_nac[i] <- sum(is.na(data[, ..i])) #if use fread there is some mistakes during to data table structure
 }
-vec_of_na
+vec_of_nac
 
 #using apply functions
 count_na <- sapply(data, function(x) sum(is.na(x))) 
@@ -46,6 +47,7 @@ for (i in 1:length(vec_gender)){
   vec_genxp[i] <- mean(data_aux$exp_by_1996)
 } 
 vec_genxp
+typeof(vec_gender[1])
 
 #---------- ENTERING PROBLEM AREA
 #using apply functions
@@ -102,6 +104,25 @@ ggplot(data_mean_malexp, aes(year_of_birth, mean_wxp)) +
   labs(color="Legend") +
   xlab('Year of Birth') +
   ylab('Mean work exp. in years until 1996')
+
+
+#3.4
+
+#using loops
+vec_of_nar <- c(length=length(data)) #НЕ РАБОТАЕТ ПОЧЕМУ-ТО
+for (i in 1:nrow(data)){
+  vec_of_nar[i] <- sum(is.na(data[i, ]))
+}
+vec_of_nar
+
+#using apply functions
+count_na <- sapply(data, function(x) sum(is.na(x))) 
+count_na
+
+#using data.table
+rowSums(is.na(data))
+
+Print("5")
 
 
 
