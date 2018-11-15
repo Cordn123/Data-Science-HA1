@@ -14,10 +14,10 @@ list_files<-unzip("hw1p2.zip",list=TRUE)[,1]
 #Locating the .csv files
 list_files<-list_files[str_detect(list_files,".csv")]
 #Establishing the connection to the archive with the "unz" function and looping through the files to store the data in "Data"
-Data<-list("vector")
+Data <- list()
 for (i in 1:length(list_files)) {
-  conn<-unz("hw1p2.zip", list_files[i])
-  Data[[i]]<-(read_csv(conn))
+  conn <- unz("hw1p2.zip", list_files[i]) #The cycle establishes connection to every file in turn 
+  Data[[i]]<-(read_csv(conn)) #Through each connection a file is read one by one into the "Data" 
 } 
 unlink(conn) #closing the connection
 #Binding the columns in the 9 resulting dataframes to fuse them into a single dataframe
