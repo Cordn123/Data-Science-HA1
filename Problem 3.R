@@ -142,7 +142,7 @@ count_nar <- apply(data_aux345, 1, function(x) sum(is.na(x)))
 count_nar
 
 #using data.table
-rowSums(is.na(data_aux345)) 
+rowSums(is.na(data_aux345))
 
 #3.5
 rowSums(data_aux345, na.rm = FALSE) #na.rm set to FALSE includes all NAs into the calculations 
@@ -150,9 +150,19 @@ rowSums(data_aux345, na.rm = FALSE) #na.rm set to FALSE includes all NAs into th
 #3.6
 xp_id_time <- function(idd, n){
   data_aux345[, (n:ncol(data_aux345)):= NULL]
-  rowSums(data_aux345[idd], na.rm = FALSE)
+  if (is.na(rowSums(data_aux345[idd], na.rm = FALSE)) == TRUE){
+    return(NA)
+  } else {
+  return(rowSums(data_aux345[idd], na.rm = FALSE))
+  }
 }
-xp_id_time(1, 50) #testing
+xp_id_time(1, 200) #testing
 
+#Вот это работало
+#xp_id_time <- function(idd, n){
+#  data_aux345[, (n:ncol(data_aux345)):= NULL]
+#  rowSums(data_aux345[idd], na.rm = FALSE)
+#  }
+#xp_id_time(1, 200)
 
 
