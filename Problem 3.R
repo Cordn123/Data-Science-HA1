@@ -121,6 +121,12 @@ data_aux345
 #------- ENTERING PROBLEM AREA
 #using loops
 
+#For paralell computing try (speeds up the coputation):
+
+#install.packages("doMC")
+#library(doMC)
+#registerDoMC(cores=2)
+
 vec_of_nar <- c(length=length(data_aux345)) #не работает цикл
 
 for (i in 1:nrow(data_aux345)){
