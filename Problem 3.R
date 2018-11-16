@@ -111,6 +111,11 @@ ggplot(data_mean_malexp, aes(year_of_birth, mean_wxp)) +
 #3.4 
 
 data_aux345 <- data[, c('date_of_birth', 'gender', 'exp_by_1996', 'year_of_birth'):=NULL]
+
+for (i in 1:length(data_aux345)){
+  data_aux345$id[i] = i
+}
+data_aux345
 #creating data containing just dummy variables for easy further calculations
 
 #------- ENTERING PROBLEM AREA
