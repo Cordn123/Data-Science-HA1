@@ -148,15 +148,15 @@ rowSums(is.na(data_aux345))
 rowSums(data_aux345, na.rm = FALSE) #na.rm set to FALSE includes all NAs into the calculations 
 
 #3.6
-xp_id_time <- function(idd, n){
-  data_aux345[, (n:ncol(data_aux345)):= NULL]
-  if (is.na(rowSums(data_aux345[idd], na.rm = FALSE)) == TRUE){
+xp_id_time <- function(idd, n){ #НО ЗДЕСЬ ТВОРИТСЯ КАКАЯ-ТО ХЕРНЯ, МЕНЯЮТСЯ ДАННЫЕ, ХОТЯ СХУЯЛИ??? ЛИБО У МЕНЯ КОМП ПОЕХАЛ
+  data_36 <- data_aux345[, (n:ncol(data_aux345)):= NULL]
+  if (is.na(rowSums(data_36[idd], na.rm = FALSE)) == TRUE){
     return(NA)
   } else {
-  return(rowSums(data_aux345[idd], na.rm = FALSE))
+  return(rowSums(data_36[idd], na.rm = FALSE))
   }
 }
-xp_id_time(1, 200) #testing
+xp_id_time(1, 57) #testing
 
 #Вот это работало
 #xp_id_time <- function(idd, n){
@@ -165,4 +165,22 @@ xp_id_time(1, 200) #testing
 #  }
 #xp_id_time(1, 200)
 
+
+#3.8
+#Calculate for all individuals total work experience in months reached by 201112.
+cumulative_xp_per_id <- vector()
+for (i in 1:nrow(data_aux345)){
+  cumulative_xp_per_id[i] <- rowSums(data_aux345[i], na.rm = TRUE)
+}
+cumulative_xp_per_id
+sum(cumulative_xp_per_id)
+
+#3.9
+#Из даты чекаю дату рождения
+#Создаю новую дату, включающую столбец work expirience before 1996
+#В разрезе на одного человека:
+#Посчитать на какой дамми ему становится 60
+#суммирую WEB96 + это колво дамми
+#запихиваю в вектор для каждого человека
+#суммирую вектор
 
