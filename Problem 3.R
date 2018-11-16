@@ -143,20 +143,16 @@ count_nar
 
 #using data.table
 rowSums(is.na(data_aux345)) 
-#https://stackoverflow.com/questions/37801338/r-count-nas-per-row-in-dataframe
 
 #3.5
-vec_totalxp <- vector(length = length(data_aux345))
-for (i in 1:nrow(data_aux345)){
-  if(apply(data_aux345, 1, function(x) sum(is.na(x)) == 0)) {
-    vec_totalxp[i] <- sum(data[i,])
-    #apply(data, 1, function(i) sum(i))
-  } else {
-    vec_totalxp[i] = NA
-  }
-
-}
-
 rowSums(data_aux345, na.rm = FALSE) #na.rm set to FALSE includes all NAs into the calculations 
+
+#3.6
+xp_id_time <- function(idd, n){
+  data_aux345[, (n:ncol(data_aux345)):= NULL]
+  rowSums(data_aux345[idd], na.rm = FALSE)
+}
+xp_id_time(1, 50) #testing
+
 
 
