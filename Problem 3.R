@@ -157,7 +157,6 @@ for (i in 1:nrow(data_aux345)){
 
 }
 
-
-
+rowSums(data_aux345, na.rm = FALSE) #na.rm set to FALSE includes all NAs into the calculations 
 
 
