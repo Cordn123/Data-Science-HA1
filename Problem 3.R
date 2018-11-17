@@ -1,6 +1,13 @@
 #Problem 3
 rm(list=ls())
 
+#Several loops take a bit long to run, thank you for your patience:
+#Also, useful tips and tricks:
+#For paralell computing try (speeds up the coputation):
+#install.packages("doMC")
+#library(doMC)
+#registerDoMC(cores=n)
+
 #3.1
 library(data.table)
 data <- fread('hw1p3.csv') #also possible to use read.csv('hw1p3.csv'), but fread is much faster
@@ -109,33 +116,15 @@ ggplot(data_mean_malexp, aes(year_of_birth, mean_wxp)) +
 
 
 #3.4 
-
-data_aux345 <- data[, c('date_of_birth', 'gender', 'exp_by_1996', 'year_of_birth'):=NULL]
 #creating data containing just dummy variables for easy further calculations
+data_aux345 <- data[, c('date_of_birth', 'gender', 'exp_by_1996', 'year_of_birth'):=NULL]
 
-for (i in 1:length(data_aux345)){
-  data_aux345$id[i] = i
-}
-data_aux345
-
-
-#------- ENTERING PROBLEM AREA
-#using loops
-
-#For paralell computing try (speeds up the coputation):
-
-#install.packages("doMC")
-#library(doMC)
-#registerDoMC(cores=2)
-
-vec_of_nar <- c(length=length(data_aux345)) #не работает цикл
+vec_of_nar <- c(length=length(data_aux345)) 
 
 for (i in 1:nrow(data_aux345)){
   vec_of_nar[i] <- sum(is.na(data_aux345[i, ]))
 }
 vec_of_nar
-
-#------ LEAVING PROBLEM AREA
 
 #using apply functions
 count_nar <- apply(data_aux345, 1, function(x) sum(is.na(x)))
@@ -148,27 +137,40 @@ rowSums(is.na(data_aux345))
 rowSums(data_aux345, na.rm = FALSE) #na.rm set to FALSE includes all NAs into the calculations 
 
 #3.6
-xp_id_time <- function(idd, n){ #НО ЗДЕСЬ ТВОРИТСЯ КАКАЯ-ТО ХЕРНЯ, МЕНЯЮТСЯ ДАННЫЕ, ХОТЯ СХУЯЛИ??? ЛИБО У МЕНЯ КОМП ПОЕХАЛ
-  data_36 <- data_aux345[, (n:ncol(data_aux345)):= NULL]
+data_36 <- data_aux345
+xp_id_time <- function(idd, n){
+  m = n+1
+  data_36 <- data_36[, (m:ncol(data_36)):= NULL] 
   if (is.na(rowSums(data_36[idd], na.rm = FALSE)) == TRUE){
     return(NA)
   } else {
-  return(rowSums(data_36[idd], na.rm = FALSE))
+    return(rowSums(data_36[idd], na.rm = FALSE))
   }
 }
-xp_id_time(1, 57) #testing
+xp_id_time(1, 10) #testing
 
-#Вот это работало
-#xp_id_time <- function(idd, n){
-#  data_aux345[, (n:ncol(data_aux345)):= NULL]
-#  rowSums(data_aux345[idd], na.rm = FALSE)
-#  }
-#xp_id_time(1, 200)
-
+#3.7
+total_xp_age <- function(idd, age) {
+  as.integer(age * 100 + data[idd,1]) %>% 
+    toString(x = .) %>% 
+    paste0('d', .) %>% 
+    match(., names(data)) %>% 
+    assign("n", . , pos=1)
+  if (is.na(n) == FALSE) {
+    return(rowSums(data[idd, 3:n]))
+  }
+  else if (as.integer(age * 100 + data[idd,1]) < 201412) {
+    return(rowSums(data[input_row, 3:ncol(data)])) 
+  }
+  else {print('FIELD_NOT_FOUND')}
+}
+total_xp_age(idd = 768, age = 34)
 
 #3.8
 #Calculate for all individuals total work experience in months reached by 201112.
 cumulative_xp_per_id <- vector()
+data_38 <- data_aux345
+data_38 <- data_38[, (1511:ncol(data_36)):= NULL]
 for (i in 1:nrow(data_aux345)){
   cumulative_xp_per_id[i] <- rowSums(data_aux345[i], na.rm = TRUE)
 }
@@ -176,11 +178,9 @@ cumulative_xp_per_id
 sum(cumulative_xp_per_id)
 
 #3.9
-#Из даты чекаю дату рождения
-#Создаю новую дату, включающую столбец work expirience before 1996
-#В разрезе на одного человека:
-#Посчитать на какой дамми ему становится 60
-#суммирую WEB96 + это колво дамми
-#запихиваю в вектор для каждого человека
-#суммирую вектор
-
+vec_xp60 <- vector()
+for (i in 1:nrow(data)){
+  vec_xp60[i] <- work_experience(i, 60) 
+}
+vec_xp60
+sum(vec_xp60, na.rm = TRUE)
