@@ -37,7 +37,7 @@ Data %>%
 
 lapply(4, function(n) combn(X , n, FUN = function(row) paste0("y ~ ", paste0(row, collapse = "+")))) %>% 
   
-  # The result are 70 combinations of 4 x[i]s with "+" pasted inbetween and "y~" pasted to the left.
+  # The result are 70 combinations of 4 x[i]s with "+" pasted inbetween as separators and "y~" pasted to the left.
   
   # 2) Simplifying to create a vector of regression equations using the "unlist" function 
   
