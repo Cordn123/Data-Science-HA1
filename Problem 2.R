@@ -2,12 +2,18 @@ rm(list=ls())
 
 library(tidyverse) 
 
-#Packages used:
+#PACKAGES used:
 # "readr" 
 # "magrittr" (piping is used extensively throughout the problem)
 # "dplyr" 
 
 # It's easier to call them up through the "tidyverse" 
+
+#SOURCES used
+# 1) "R for Data Science" by Garrett Grolemund and Hadley Wickham
+# 2) https://stackoverflow.com/questions/40536666/r-read-multiple-files-from-zip-without-extracting
+# 3) https://stackoverflow.com/questions/52200936/create-all-combinations-of-letter-substitution-in-string
+# 4) https://stackoverflow.com/questions/42192313/by-two-combinations-of-predictors-in-linear-regression-in-r
 
 #Creating a list of names of files in the archive (without extracting them!)
 list_files<-unzip("hw1p2.zip",list=TRUE)[,1]
