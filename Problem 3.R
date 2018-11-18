@@ -1,7 +1,9 @@
 #Problem 3
 rm(list=ls())
 
+#NOTE:
 #Several loops take a bit long to run, thank you for your patience:
+
 #Also, useful tips and tricks:
 #For paralell computing try (speeds up the coputation):
 #install.packages("doMC")
@@ -11,16 +13,15 @@ rm(list=ls())
 #3.1
 library(data.table)
 data <- fread('hw1p3.csv') #also possible to use read.csv('hw1p3.csv'), but fread is much faster
+#just to understand the data
 summary(data)
-View(data)
 head(data)
 
 #3.1
 #using loops
-vec_of_nac <- c(length=length(data)) #правда в этом случае не подписаны переменные. Можно попробовать лист, 
-#но там тоже придется переименовывать элементы
+vec_of_nac <- c(length=length(data)) 
 for (i in 1:ncol(data)){
-  vec_of_nac[i] <- sum(is.na(data[, ..i])) #if use fread there is some mistakes during to data table structure
+  vec_of_nac[i] <- sum(is.na(data[, ..i])) #"..i" structure is special for data.table to operate properly
 }
 vec_of_nac
 
@@ -39,16 +40,16 @@ vec_year_of_birth <- unique(data$year_of_birth) #vec with only unique years of b
 vec_of_meanxp <- vector(length=length(vec_year_of_birth)) #creating vector to store required data later on
 
 data$exp_by_1996 <- as.numeric(data$exp_by_1996) #convert all elements to numbers, strings to NA 
-data <- data[!is.na(data$exp_by_1996),] #reshaping the data
+data <- data[!is.na(data$exp_by_1996),] #reshaping the data, removing all NA
 
-#By experience before 1996
+#Calculating By experience before 1996
 for (i in 1:length(vec_year_of_birth)){
   data_aux <- data[data$year_of_birth == vec_year_of_birth[i], ]
   vec_of_meanxp[i] <- mean(data_aux$exp_by_1996)
 } 
 vec_of_meanxp
 
-#By gender
+#Calculating By gender
 vec_gender <- unique(data$gender) #vec with only unique gender, i.e only two values M, F
 vec_genxp <- vector(length=length(vec_gender)) #creating vector to store required data later on
 
@@ -57,9 +58,7 @@ for (i in 1:length(vec_gender)){
   vec_genxp[i] <- mean(data_aux$exp_by_1996)
 } 
 vec_genxp
-typeof(vec_gender[1])
 
-#EGOR's APPLIED REPAIRS - for all your applying needs 
 
 #Using tapply() function to calculate grouped means by year of birth and gender:
 
@@ -67,13 +66,13 @@ tapply(data$exp_by_1996, data$year_of_birth, FUN = mean) #years of birth
 
 tapply(data$exp_by_1996, data$gender, FUN = mean) #gender
 
-#REPAIRS DONE 
-
 #using data.table
 #for year of birth
+#Once again reshaping the data just in case
 data$year_of_birth <- substr(data$date_of_birth, 0, 4)
 data[,year_of_birth:=as.numeric(year_of_birth)]
 data <- data[!is.na(year_of_birth)]
+
 
 data_mean_wxp <- data[, .(mean_wxp=mean(exp_by_1996)), by = c('year_of_birth')]
 data_mean_wxp
@@ -84,7 +83,6 @@ data_mean_genxp
 
 
 #3.3
-#This will work as soon as data.table will be fixed in the ex. above
 library(ggplot2)
 
 #also could have used filter() in dplyr
@@ -101,12 +99,6 @@ data_mean_femalexp <- data_female[,mean_wxp:=mean(exp_by_1996), by = c('year_of_
 data_mean_femalexp
 
 #plotting this mean for both men and women separately as a function of year of birth
-#Example just for men 
-
-#ggplot(data_mean_malexp,
-#       aes(x = year_of_birth, y = mean_wxp)) + geom_line(colour='orange')
-
-#This works, can't change colors though
 ggplot(data_mean_malexp, aes(year_of_birth, mean_wxp)) + 
   geom_line(aes(color="Male"))+
   geom_line(data=data_mean_femalexp, aes(color="Female"))+
@@ -119,8 +111,8 @@ ggplot(data_mean_malexp, aes(year_of_birth, mean_wxp)) +
 #creating data containing just dummy variables for easy further calculations
 data_aux345 <- data[, c('date_of_birth', 'gender', 'exp_by_1996', 'year_of_birth'):=NULL]
 
+#This takes time :)
 vec_of_nar <- c(length=length(data_aux345)) 
-
 for (i in 1:nrow(data_aux345)){
   vec_of_nar[i] <- sum(is.na(data_aux345[i, ]))
 }
@@ -137,19 +129,19 @@ rowSums(is.na(data_aux345))
 rowSums(data_aux345, na.rm = FALSE) #na.rm set to FALSE includes all NAs into the calculations 
 
 #3.6
-data_36 <- data_aux345
+data_36 <- data_aux345 #creating the brand new data specificslly for this problem
 xp_id_time <- function(idd, n){
-  m = n+1
-  data_36 <- data_36[, (m:ncol(data_36)):= NULL] 
-  if (is.na(rowSums(data_36[idd], na.rm = FALSE)) == TRUE){
+  m = n+1 #including column n
+  data_36 = data_36[, (m:ncol(data_36)):= NULL] #droping all columns we are not interested in
+  if (is.na(rowSums(data_36[idd], na.rm = FALSE)) == TRUE){ #in case we have NA, return NA
     return(NA)
   } else {
-    return(rowSums(data_36[idd], na.rm = FALSE))
+    return(rowSums(data_36[idd], na.rm = FALSE)) #in case we are good, summing up all rows, i.e for each person (idd)
   }
 }
-xp_id_time(1, 10) #testing
+xp_id_time(1, 200) #testing
 
-#3.7
+#3.7 #COMMENT IT!!
 total_xp_age <- function(idd, age) {
   as.integer(age * 100 + data[idd,1]) %>% 
     toString(x = .) %>% 
@@ -169,18 +161,16 @@ total_xp_age(idd = 768, age = 34)
 #3.8
 #Calculate for all individuals total work experience in months reached by 201112.
 cumulative_xp_per_id <- vector()
-data_38 <- data_aux345
-data_38 <- data_38[, (1511:ncol(data_36)):= NULL]
+data_38 <- data_aux345 #creating new data
+data_38 <- data_38[, (1511:ncol(data_36)):= NULL] #once again, drop all columns we do not need, in our case, all columns after d201112
 for (i in 1:nrow(data_aux345)){
-  cumulative_xp_per_id[i] <- rowSums(data_aux345[i], na.rm = TRUE)
+  cumulative_xp_per_id[i] <- rowSums(data_aux345[i], na.rm = TRUE) #filling vector with each row sum 
 }
-cumulative_xp_per_id
-sum(cumulative_xp_per_id)
+sum(cumulative_xp_per_id) #summing up all the elements of the vector, so that we arrive to the final result
 
 #3.9
-vec_xp60 <- vector()
+vec_xp60 <- vector() 
 for (i in 1:nrow(data)){
-  vec_xp60[i] <- work_experience(i, 60) 
+  vec_xp60[i] <- work_experience(i, 60) #just applying our function from 3.7 to each individual and prespecifying the required age 60
 }
-vec_xp60
-sum(vec_xp60, na.rm = TRUE)
+sum(vec_xp60, na.rm = TRUE) #summing all elements if the vector to get the final result
