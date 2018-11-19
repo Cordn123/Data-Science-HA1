@@ -141,20 +141,22 @@ xp_id_time <- function(idd, n){
 }
 xp_id_time(1, 200) #testing
 
-#3.7 #COMMENT IT!!
-total_xp_age <- function(idd, age) {
-  as.integer(age * 100 + data[idd,1]) %>% 
-    toString(x = .) %>% 
-    paste0('d', .) %>% 
+#3.7
+total_xp_age <- function(idd, age) { #creating a function two variables 
+  #more specifically we make a function of an individual for whom all dummies are taking into account
+  #and calculating this by a certain age
+  as.integer(age * 100 + data[idd,1]) %>% #multipliation by 100 allows to bring the data in line with the dates used in 'data'
+    toString(x = .) %>% #then use our favorite piping to plug in data from one func to another
+    paste0('d', .) %>% #pasting a d to match the format column dates in 'data'
     match(., names(data)) %>% 
     assign("n", . , pos=1)
-  if (is.na(n) == FALSE) {
-    return(rowSums(data[idd, 3:n]))
+  if (is.na(n) == FALSE) { #if we are all set just calculate row sums 
+    return(rowSums(data[idd, 3:n])) #starting from 3 to exclude unnecessary columns 
   }
-  else if (as.integer(age * 100 + data[idd,1]) < 201412) {
+  else if (as.integer(age * 100 + data[idd,1]) < 201412) { #considering specific case 
     return(rowSums(data[input_row, 3:ncol(data)])) 
   }
-  else {print('FIELD_NOT_FOUND')}
+  else {print('FIELD_NOT_FOUND')} #as specified in the problem text 
 }
 total_xp_age(idd = 768, age = 34)
 
